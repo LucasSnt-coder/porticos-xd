@@ -12,6 +12,9 @@ def install(app_class):
     """Instala el editor base y añade rejilla/selección/vistas seguras."""
     _base_install(app_class)
     app_class._ie_view = _view
+    # El editor base conserva botones de diagramas que llaman al nombre
+    # antiguo; redirigimos ese nombre a una implementación mínima y segura.
+    app_class._set_diagram_view = _view
     original = app_class._redraw
     app_class._ie_original_redraw_v2 = original
     app_class._redraw = _redraw
@@ -26,14 +29,10 @@ def _redraw(self):
     self._ie_original_redraw_v2(self)
     if not hasattr(self, "ax"):
         return
-    # Rejilla de trabajo: cada intersección de 1 unidad es un punto válido
-    # para insertar nodos mediante el ajuste automático (snap).
     self.ax.xaxis.set_major_locator(MultipleLocator(_GRID))
     self.ax.yaxis.set_major_locator(MultipleLocator(_GRID))
     self.ax.grid(True, which="major", linestyle=":", linewidth=0.55, alpha=0.35)
 
-    # Resaltar nodo seleccionado y primer extremo durante la creación de un
-    # elemento. Se dibuja encima del renderer existente.
     nid = getattr(self, "_ie_selected_node", None)
     if nid in self.nodes:
         n = self.nodes[nid]
