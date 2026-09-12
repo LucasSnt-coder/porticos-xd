@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 """Punto de entrada de Industrializer — Santos Corp."""
 
-from industrializer_app import run_app
+from industrializer_app import IndustrializerApp, run_app
+from interactive_editor import install
+
+# Sustituye únicamente la pestaña Editor Visual; el solver, resultados,
+# procedimiento y exportación existentes permanecen en IndustrializerApp.
+install(IndustrializerApp)
 
 
 if __name__ == "__main__":
